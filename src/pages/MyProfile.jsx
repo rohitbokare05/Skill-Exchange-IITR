@@ -1,190 +1,133 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
-import { db, auth } from '../firebase';
-import { Edit3, Mail, Star, Loader } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getAuth } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import { Edit3, Star, ArrowLeft } from "lucide-react";
 
 const MyProfile = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const auth = getAuth();
 
   useEffect(() => {
-    loadMyProfile();
-  }, []);
-
-  const loadMyProfile = async () => {
-    try {
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        navigate('/');
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        navigate("/login");
         return;
       }
 
-      const userRef = doc(db, 'users', currentUser.uid);
-      const userSnap = await getDoc(userRef);
-
-      if (userSnap.exists()) {
-        setUserData({ uid: userSnap.id, ...userSnap.data() });
+      try {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setUserData(docSnap.data());
+        } else {
+          console.error("User data not found!");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error loading profile:', error);
-      alert('Failed to load your profile');
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    fetchUserData();
+  }, [auth, navigate]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-violet-50 flex items-center justify-center">
-        <div className="text-center">
-          <Loader className="animate-spin h-12 w-12 text-purple-500 mx-auto" />
-          <p className="mt-4 text-gray-600">Loading your profile...</p>
-        </div>
+      <div className="flex justify-center items-center h-screen text-[#6B21A8] text-lg font-medium">
+        Loading...
       </div>
     );
   }
 
-  if (!userData) return null;
+  if (!userData) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen text-gray-600 bg-[#F5F3FF]">
+        <p className="text-gray-700 text-lg mb-2">User data not found.</p>
+        <button
+          onClick={() => navigate("/")}
+          className="mt-2 px-5 py-2 bg-[#A78BFA] text-white rounded-xl font-semibold hover:bg-[#6B21A8] transition-all"
+        >
+          Go Home
+        </button>
+      </div>
+    );
+  }
 
-  const avgRating = userData.ratingCount > 0 
-    ? (userData.ratingSum / userData.ratingCount).toFixed(1) 
-    : 0;
-
-  // Sort skills by addedAt (newest first)
-  const sortedSkills = [...userData.skills].sort((a, b) => 
-    new Date(b.addedAt) - new Date(a.addedAt)
+  const skillsArray = Array.isArray(userData.skills) ? userData.skills : [];
+  const sortedSkills = [...skillsArray].sort(
+    (a, b) => new Date(b.addedAt) - new Date(a.addedAt)
   );
-
-  const badgeColors = [
-    'bg-purple-100 text-purple-700 border border-purple-200',
-    'bg-violet-100 text-violet-700 border border-violet-200',
-    'bg-fuchsia-100 text-fuchsia-700 border border-fuchsia-200',
-    'bg-indigo-100 text-indigo-700 border border-indigo-200',
-    'bg-pink-100 text-pink-700 border border-pink-200'
-  ];
-  
-  const getPhotoUrl = () => {
-    if (!userData) return '';
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&size=256&background=A78BFA&color=fff&bold=true&format=png`;
-  };
+  const avgRating =
+    userData.ratingCount > 0
+      ? (userData.ratingSum / userData.ratingCount).toFixed(1)
+      : "N/A";
 
   return (
-    <div className="min-h-screen bg-violet-50">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Profile Header */}
-        <div className="bg-white rounded-2xl shadow-lg border-2 border-purple-100 p-8 mb-8">
-          <div className="text-center">
-            <p className="text-sm text-purple-600 font-semibold mb-2 uppercase tracking-wide">
-              Your Profile
-            </p>
-            <img
-              src={getPhotoUrl()}
-              alt={userData.name}
-              className="w-32 h-32 rounded-full mx-auto border-4 border-purple-200 shadow-xl mb-4"
-            />
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {userData.name}
-            </h1>
-            <div className="flex items-center justify-center gap-2 text-gray-600 mb-4">
-              <Mail size={18} className="text-purple-600" />
-              <span>{userData.email}</span>
-            </div>
+    <div className="min-h-screen bg-[#F5F3FF] py-10 px-4">
+      {/* Profile Card */}
+      <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-md border border-[#EDE9FE] p-6">
+        {/* Back Button */}
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-[#6B21A8] hover:text-[#4C1D95] mb-4 transition-colors"
+        >
+          <ArrowLeft size={18} />
+          Back
+        </button>
 
-            {/* Rating Display */}
-            <div className="mb-4">
-              <div className="flex items-center justify-center gap-1 mb-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    size={24}
-                    className={`${
-                      star <= Math.round(avgRating)
-                        ? 'text-yellow-400 fill-yellow-400'
-                        : 'text-gray-300'
-                    }`}
-                  />
-                ))}
-              </div>
-              <p className="text-lg font-semibold text-gray-900">
-                {avgRating} / 5.0
-              </p>
-              <p className="text-sm text-gray-600">
-                {userData.ratingCount > 0 
-                  ? `Based on ${userData.ratingCount} rating${userData.ratingCount > 1 ? 's' : ''}`
-                  : 'No ratings yet'}
-              </p>
-            </div>
+        {/* Profile Header */}
+        <div className="text-center mb-6">
+          <div className="w-24 h-24 mx-auto rounded-full bg-[#EDE9FE] flex items-center justify-center text-4xl font-bold text-[#6B21A8] shadow-inner">
+            {userData.name?.[0]?.toUpperCase() || "?"}
+          </div>
+          <h1 className="mt-4 text-2xl font-semibold text-[#111827]">
+            {userData.name || "Unnamed User"}
+          </h1>
+          <p className="text-gray-500">{userData.email}</p>
+
+          {/* Rating */}
+          <div className="flex justify-center items-center gap-2 mt-3">
+            <Star size={18} fill="#FCD34D" className="text-yellow-400" />
+            <span className="text-[#6B21A8] font-medium">{avgRating}</span>
           </div>
         </div>
 
         {/* Skills Section */}
-        <div className="bg-white rounded-2xl shadow-lg border-2 border-purple-100 p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <span className="text-purple-600">📚</span> YOUR SKILLS
-          </h2>
+        <h2 className="text-lg font-semibold text-[#6B21A8] mb-3">
+          My Skills
+        </h2>
 
-          {userData.skills.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">📚</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                NO SKILLS ADDED YET
-              </h3>
-              <p className="text-gray-600 mb-6">
-                You haven't added any skills to your profile.<br />
-                Add skills to help other students find you!
-              </p>
-              <button
-                onClick={() => navigate('/edit-skills')}
-                className="inline-flex items-center gap-2 bg-purple-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-purple-600 transition-colors shadow-md hover:shadow-lg"
+        {skillsArray.length === 0 ? (
+          <p className="text-gray-500 text-sm mb-6">
+            No skills added yet. Click below to add your skills!
+          </p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+            {sortedSkills.map((skill, index) => (
+              <div
+                key={index}
+                className="bg-[#F5F3FF] border border-[#A78BFA] text-[#6B21A8] font-medium py-2 px-3 rounded-lg text-center shadow-sm hover:shadow-md transition-shadow duration-200"
               >
-                <Edit3 size={20} />
-                Add Skills Now
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {sortedSkills.map((skill, idx) => (
-                <div
-                  key={idx}
-                  className="border-2 border-purple-100 rounded-xl p-6 hover:shadow-md hover:border-purple-200 transition-all"
-                >
-                  <div className="mb-3">
-                    <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold ${badgeColors[idx % badgeColors.length]}`}>
-                      {skill.skillTag}
-                    </span>
-                  </div>
-                  
-                  {skill.customMessage && (
-                    <p className="text-gray-700 mb-3 leading-relaxed">
-                      "{skill.customMessage}"
-                    </p>
-                  )}
-                  
-                  <p className="text-xs text-gray-500">
-                    Added on {new Date(skill.addedAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Edit Button */}
-        {userData.skills.length > 0 && (
-          <button
-            onClick={() => navigate('/edit-skills')}
-            className="w-full flex items-center justify-center gap-2 bg-purple-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-purple-600 transition-colors shadow-md hover:shadow-lg"
-          >
-            <Edit3 size={20} />
-            Edit Skills
-          </button>
+                {skill.name}
+              </div>
+            ))}
+          </div>
         )}
+
+        {/* Edit Skills Button */}
+        <button
+          onClick={() => navigate("/edit-skills")}
+          className="w-full flex items-center justify-center gap-2 bg-[#A78BFA] text-white font-semibold py-3 px-6 rounded-xl hover:bg-[#6B21A8] transition-colors"
+        >
+          <Edit3 size={20} />
+          {skillsArray.length === 0 ? "Add Skills" : "Edit Skills"}
+        </button>
       </div>
     </div>
   );

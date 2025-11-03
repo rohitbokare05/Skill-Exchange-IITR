@@ -27,7 +27,7 @@ const UserProfile = () => {
         setUser({ 
           uid: userSnap.id, 
           ...userData,
-          skills: userData.skills || [], // Ensure skills is always an array
+          skills: userData.skills || [],
           ratingSum: userData.ratingSum || 0,
           ratingCount: userData.ratingCount || 0
         });
@@ -42,16 +42,18 @@ const UserProfile = () => {
       setLoading(false);
     }
   };
+
   const getPhotoUrl = () => {
     if (!user) return '';
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=256&background=4F46E5&color=fff&bold=true&format=png`;
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=256&background=A78BFA&color=fff&bold=true&format=png`;
   };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#F5F3FF] flex items-center justify-center">
         <div className="text-center">
-          <Loader className="animate-spin h-12 w-12 text-indigo-600 mx-auto" />
-          <p className="mt-4 text-gray-600">Loading profile...</p>
+          <Loader className="animate-spin h-12 w-12 text-[#A78BFA] mx-auto" />
+          <p className="mt-4 text-[#6B21A8] font-medium">Loading profile...</p>
         </div>
       </div>
     );
@@ -63,7 +65,6 @@ const UserProfile = () => {
     ? (user.ratingSum / user.ratingCount).toFixed(1) 
     : 0;
 
-  // Sort skills by addedAt (newest first) - with safety check
   const sortedSkills = user.skills && Array.isArray(user.skills)
     ? [...user.skills].sort((a, b) => {
         const dateA = a.addedAt ? new Date(a.addedAt) : new Date(0);
@@ -73,38 +74,38 @@ const UserProfile = () => {
     : [];
 
   const badgeColors = [
-    'bg-blue-100 text-blue-700',
-    'bg-green-100 text-green-700',
-    'bg-purple-100 text-purple-700',
-    'bg-orange-100 text-orange-700',
-    'bg-pink-100 text-pink-700'
+    'bg-[#E0E7FF] text-[#4338CA]',
+    'bg-[#FCE7F3] text-[#A21CAF]',
+    'bg-[#EDE9FE] text-[#6B21A8]',
+    'bg-[#F3E8FF] text-[#581C87]',
+    'bg-[#FEF9C3] text-[#92400E]'
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="min-h-screen bg-[#F5F3FF] text-[#111827]">
+      <div className="max-w-4xl mx-auto px-4 py-10">
         {/* Back Button */}
         <button
           onClick={() => navigate('/home')}
-          className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 font-medium mb-6"
+          className="flex items-center gap-2 text-[#6B21A8] hover:text-[#A78BFA] font-medium mb-6 transition-colors"
         >
           <ArrowLeft size={20} />
           Back to Home
         </button>
 
         {/* Profile Header */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+        <div className="bg-white border border-[#A78BFA]/40 rounded-2xl shadow-lg p-8 mb-8">
           <div className="text-center">
             <img
               src={getPhotoUrl()}
               alt={user.name}
-              className="w-32 h-32 rounded-full mx-auto border-4 border-white shadow-xl mb-4"
+              className="w-32 h-32 rounded-full mx-auto border-4 border-[#A78BFA] shadow-xl mb-4"
             />
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-[#111827] mb-2">
               {user.name}
             </h1>
             <div className="flex items-center justify-center gap-2 text-gray-600 mb-4">
-              <Mail size={18} />
+              <Mail size={18} className="text-[#6B21A8]" />
               <span>{user.email}</span>
             </div>
 
@@ -117,13 +118,13 @@ const UserProfile = () => {
                     size={24}
                     className={`${
                       star <= Math.round(avgRating)
-                        ? 'text-yellow-500 fill-yellow-500'
+                        ? 'text-[#FCD34D] fill-[#FCD34D]'
                         : 'text-gray-300'
                     }`}
                   />
                 ))}
               </div>
-              <p className="text-lg font-semibold text-gray-900">
+              <p className="text-lg font-semibold text-[#6B21A8]">
                 {avgRating} / 5.0
               </p>
               <p className="text-sm text-gray-600">
@@ -136,8 +137,8 @@ const UserProfile = () => {
         </div>
 
         {/* Skills Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+        <div className="bg-white border border-[#A78BFA]/40 rounded-2xl shadow-lg p-8 mb-8">
+          <h2 className="text-2xl font-bold text-[#6B21A8] mb-6 flex items-center gap-2">
             📚 SKILLS OFFERED
           </h2>
 
@@ -150,7 +151,7 @@ const UserProfile = () => {
               {sortedSkills.map((skill, idx) => (
                 <div
                   key={idx}
-                  className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow"
+                  className="border border-[#A78BFA]/30 rounded-xl p-6 bg-[#F9F8FF] hover:shadow-md transition-shadow"
                 >
                   <div className="mb-3">
                     <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold ${badgeColors[idx % badgeColors.length]}`}>
@@ -159,7 +160,7 @@ const UserProfile = () => {
                   </div>
                   
                   {skill.customMessage && (
-                    <p className="text-gray-700 mb-3 leading-relaxed">
+                    <p className="text-gray-700 mb-3 leading-relaxed italic">
                       "{skill.customMessage}"
                     </p>
                   )}
@@ -180,10 +181,10 @@ const UserProfile = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
           <a
             href={`mailto:${user.email}?subject=Skill Exchange @ IITR - Learning ${sortedSkills[0]?.skillTag || 'a skill'}`}
-            className="flex-1 flex items-center justify-center gap-2 bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-indigo-700 transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 bg-[#6B21A8] text-white font-semibold py-3 px-6 rounded-lg hover:bg-[#A78BFA] transition-colors shadow-md"
           >
             <Mail size={20} />
             Message via Email
@@ -191,7 +192,7 @@ const UserProfile = () => {
           
           <button
             onClick={() => setShowRatingModal(true)}
-            className="flex-1 flex items-center justify-center gap-2 bg-white border-2 border-indigo-600 text-indigo-600 font-semibold py-3 px-6 rounded-lg hover:bg-indigo-50 transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 bg-white border-2 border-[#A78BFA] text-[#6B21A8] font-semibold py-3 px-6 rounded-lg hover:bg-[#F5F3FF] transition-colors shadow-sm"
           >
             <Star size={20} />
             Rate This User
@@ -199,7 +200,6 @@ const UserProfile = () => {
         </div>
       </div>
 
-      {/* Rating Modal */}
       {showRatingModal && (
         <RatingModal
           user={user}
