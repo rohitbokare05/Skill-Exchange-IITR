@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import RatingModal from '../components/RatingModal';
-import { ArrowLeft, Mail, Star, Loader } from 'lucide-react';
+import { ArrowLeft, Mail, Star, Loader, Copy, Check } from 'lucide-react';
 
 const UserProfile = () => {
   const { uid } = useParams();
@@ -11,6 +11,8 @@ const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showRatingModal, setShowRatingModal] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     loadUserProfile();
@@ -46,6 +48,12 @@ const UserProfile = () => {
   const getPhotoUrl = () => {
     if (!user) return '';
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=256&background=A78BFA&color=fff&bold=true&format=png`;
+  };
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(user.email);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   if (loading) {
@@ -182,13 +190,13 @@ const UserProfile = () => {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4">
-          <a
-            href={`mailto:${user.email}?subject=Skill Exchange @ IITR - Learning ${sortedSkills[0]?.skillTag || 'a skill'}`}
+          <button
+            onClick={() => setShowEmailModal(true)}
             className="flex-1 flex items-center justify-center gap-2 bg-[#6B21A8] text-white font-semibold py-3 px-6 rounded-lg hover:bg-[#A78BFA] transition-colors shadow-md"
           >
             <Mail size={20} />
             Message via Email
-          </a>
+          </button>
           
           <button
             onClick={() => setShowRatingModal(true)}
@@ -200,12 +208,41 @@ const UserProfile = () => {
         </div>
       </div>
 
+      {/* Rating Modal */}
       {showRatingModal && (
         <RatingModal
           user={user}
           onClose={() => setShowRatingModal(false)}
           onSuccess={loadUserProfile}
         />
+      )}
+
+      {/* Email Modal */}
+      {showEmailModal && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl shadow-xl border border-[#A78BFA]/40 w-96 p-6 text-center">
+            <h2 className="text-2xl font-bold text-[#6B21A8] mb-4">📧 Contact via Email</h2>
+            <p className="text-gray-700 mb-6">
+              You can reach <span className="font-semibold">{user.name}</span> at:
+            </p>
+
+            <div className="flex items-center justify-between bg-[#F5F3FF] border border-[#A78BFA]/40 rounded-lg px-4 py-3 mb-4">
+              <span className="text-[#111827] font-medium truncate">{user.email}</span>
+              <button onClick={handleCopyEmail} className="text-[#6B21A8] hover:text-[#A78BFA] transition">
+                {copied ? <Check size={18} /> : <Copy size={18} />}
+              </button>
+            </div>
+
+            {copied && <p className="text-sm text-green-600 font-medium mb-2">Copied to clipboard ✅</p>}
+
+            <button
+              onClick={() => setShowEmailModal(false)}
+              className="mt-2 bg-[#6B21A8] hover:bg-[#A78BFA] text-white font-semibold py-2 px-6 rounded-lg transition"
+            >
+              Close
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

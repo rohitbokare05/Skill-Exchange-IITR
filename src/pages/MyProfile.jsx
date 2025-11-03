@@ -98,7 +98,7 @@ const MyProfile = () => {
           </div>
         </div>
 
-        {/* Skills Section */}
+        {/* Skills Section
         <h2 className="text-lg font-semibold text-[#6B21A8] mb-3">
           My Skills
         </h2>
@@ -118,7 +118,28 @@ const MyProfile = () => {
               </div>
             ))}
           </div>
-        )}
+        )} */}
+        {/* Skills Section */}
+{/* Skills Section */}
+<h2 className="text-lg font-semibold text-[#6B21A8] mb-3">My Skills</h2>
+
+{skillsArray.length === 0 ? (
+  <p className="text-gray-500 text-sm mb-6">
+    No skills added yet. Click below to add your skills!
+  </p>
+) : (
+  <div className="flex flex-wrap justify-center gap-3 mb-6">
+    {sortedSkills.map((skill, index) => (
+      <div
+        key={index}
+        className="bg-gradient-to-r from-[#EDE9FE] to-[#DDD6FE] text-[#4C1D95] font-medium px-5 py-2 rounded-full shadow-sm hover:shadow-md hover:scale-105 transition-all duration-200 border border-[#C4B5FD]"
+      >
+        {skill.skillTag || "Unnamed Skill"}
+      </div>
+    ))}
+  </div>
+)}
+
 
         {/* Edit Skills Button */}
         <button
