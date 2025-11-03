@@ -42,7 +42,10 @@ const UserProfile = () => {
       setLoading(false);
     }
   };
-
+  const getPhotoUrl = () => {
+    if (!user) return '';
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=256&background=4F46E5&color=fff&bold=true&format=png`;
+  };
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -93,7 +96,7 @@ const UserProfile = () => {
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
           <div className="text-center">
             <img
-              src={user.photo}
+              src={getPhotoUrl()}
               alt={user.name}
               className="w-32 h-32 rounded-full mx-auto border-4 border-white shadow-xl mb-4"
             />

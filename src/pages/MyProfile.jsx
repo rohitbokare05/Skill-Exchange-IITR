@@ -37,9 +37,9 @@ const MyProfile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-violet-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader className="animate-spin h-12 w-12 text-indigo-600 mx-auto" />
+          <Loader className="animate-spin h-12 w-12 text-purple-500 mx-auto" />
           <p className="mt-4 text-gray-600">Loading your profile...</p>
         </div>
       </div>
@@ -58,32 +58,37 @@ const MyProfile = () => {
   );
 
   const badgeColors = [
-    'bg-blue-100 text-blue-700',
-    'bg-green-100 text-green-700',
-    'bg-purple-100 text-purple-700',
-    'bg-orange-100 text-orange-700',
-    'bg-pink-100 text-pink-700'
+    'bg-purple-100 text-purple-700 border border-purple-200',
+    'bg-violet-100 text-violet-700 border border-violet-200',
+    'bg-fuchsia-100 text-fuchsia-700 border border-fuchsia-200',
+    'bg-indigo-100 text-indigo-700 border border-indigo-200',
+    'bg-pink-100 text-pink-700 border border-pink-200'
   ];
+  
+  const getPhotoUrl = () => {
+    if (!userData) return '';
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&size=256&background=A78BFA&color=fff&bold=true&format=png`;
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-violet-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Profile Header */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+        <div className="bg-white rounded-2xl shadow-lg border-2 border-purple-100 p-8 mb-8">
           <div className="text-center">
-            <p className="text-sm text-indigo-600 font-semibold mb-2 uppercase tracking-wide">
+            <p className="text-sm text-purple-600 font-semibold mb-2 uppercase tracking-wide">
               Your Profile
             </p>
             <img
-              src={userData.photo}
+              src={getPhotoUrl()}
               alt={userData.name}
-              className="w-32 h-32 rounded-full mx-auto border-4 border-white shadow-xl mb-4"
+              className="w-32 h-32 rounded-full mx-auto border-4 border-purple-200 shadow-xl mb-4"
             />
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {userData.name}
             </h1>
             <div className="flex items-center justify-center gap-2 text-gray-600 mb-4">
-              <Mail size={18} />
+              <Mail size={18} className="text-purple-600" />
               <span>{userData.email}</span>
             </div>
 
@@ -96,7 +101,7 @@ const MyProfile = () => {
                     size={24}
                     className={`${
                       star <= Math.round(avgRating)
-                        ? 'text-yellow-500 fill-yellow-500'
+                        ? 'text-yellow-400 fill-yellow-400'
                         : 'text-gray-300'
                     }`}
                   />
@@ -115,9 +120,9 @@ const MyProfile = () => {
         </div>
 
         {/* Skills Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+        <div className="bg-white rounded-2xl shadow-lg border-2 border-purple-100 p-8 mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            📚 YOUR SKILLS
+            <span className="text-purple-600">📚</span> YOUR SKILLS
           </h2>
 
           {userData.skills.length === 0 ? (
@@ -132,7 +137,7 @@ const MyProfile = () => {
               </p>
               <button
                 onClick={() => navigate('/edit-skills')}
-                className="inline-flex items-center gap-2 bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-indigo-700 transition-colors"
+                className="inline-flex items-center gap-2 bg-purple-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-purple-600 transition-colors shadow-md hover:shadow-lg"
               >
                 <Edit3 size={20} />
                 Add Skills Now
@@ -143,7 +148,7 @@ const MyProfile = () => {
               {sortedSkills.map((skill, idx) => (
                 <div
                   key={idx}
-                  className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow"
+                  className="border-2 border-purple-100 rounded-xl p-6 hover:shadow-md hover:border-purple-200 transition-all"
                 >
                   <div className="mb-3">
                     <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold ${badgeColors[idx % badgeColors.length]}`}>
@@ -174,7 +179,7 @@ const MyProfile = () => {
         {userData.skills.length > 0 && (
           <button
             onClick={() => navigate('/edit-skills')}
-            className="w-full flex items-center justify-center gap-2 bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-indigo-700 transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-purple-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-purple-600 transition-colors shadow-md hover:shadow-lg"
           >
             <Edit3 size={20} />
             Edit Skills

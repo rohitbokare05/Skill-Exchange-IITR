@@ -26,6 +26,7 @@ const Login = () => {
           name: user.displayName,
           email: user.email,
           photo: user.photoURL,
+          customPhoto: null,
           skills: [],
           ratingSum: 0,
           ratingCount: 0,
@@ -47,14 +48,14 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#F5F3FF] via-[#EDE9FE] to-[#DDD6FE] flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Main Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 border border-[#A78BFA]/20">
           {/* Header */}
           <div className="text-center mb-8">
             <div className="text-5xl mb-4">🎓</div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-[#111827] mb-2">
               Skill Exchange @ IITR
             </h1>
             <p className="text-gray-600">
@@ -66,11 +67,11 @@ const Login = () => {
           <button
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-300 rounded-lg px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 hover:border-indigo-400 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+            className="w-full flex items-center justify-center gap-3 bg-white border-2 border-[#A78BFA] rounded-lg px-6 py-3 font-semibold text-[#111827] hover:bg-[#F5F3FF] hover:border-[#6B21A8] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
           >
             {loading ? (
               <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-indigo-600"></div>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[#A78BFA]"></div>
                 <span>Signing in...</span>
               </>
             ) : (
@@ -99,8 +100,8 @@ const Login = () => {
           </button>
 
           {/* Features List */}
-          <div className="mt-8 pt-8 border-t border-gray-200">
-            <h3 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">
+          <div className="mt-8 pt-8 border-t border-[#A78BFA]/20">
+            <h3 className="text-sm font-semibold text-[#6B21A8] mb-4 uppercase tracking-wide">
               Platform Features
             </h3>
             <div className="space-y-3">
@@ -112,7 +113,7 @@ const Login = () => {
                 'Discover hidden talents in campus'
               ].map((feature, idx) => (
                 <div key={idx} className="flex items-center gap-3 text-gray-600">
-                  <Check size={18} className="text-green-600 flex-shrink-0" />
+                  <Check size={18} className="text-[#6B21A8] flex-shrink-0" />
                   <span className="text-sm">{feature}</span>
                 </div>
               ))}
@@ -121,7 +122,7 @@ const Login = () => {
         </div>
 
         {/* Footer Note */}
-        <p className="text-center text-sm text-gray-500 mt-6">
+        <p className="text-center text-sm text-gray-600 mt-6">
           Available for IIT Roorkee students only
         </p>
       </div>

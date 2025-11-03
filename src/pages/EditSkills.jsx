@@ -129,9 +129,9 @@ const EditSkills = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-violet-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader className="animate-spin h-12 w-12 text-indigo-600 mx-auto" />
+          <Loader className="animate-spin h-12 w-12 text-purple-500 mx-auto" />
           <p className="mt-4 text-gray-600">Loading your skills...</p>
         </div>
       </div>
@@ -139,20 +139,20 @@ const EditSkills = () => {
   }
 
   const badgeColors = [
-    'bg-blue-100 text-blue-700',
-    'bg-green-100 text-green-700',
-    'bg-purple-100 text-purple-700',
-    'bg-orange-100 text-orange-700',
-    'bg-pink-100 text-pink-700'
+    'bg-purple-100 text-purple-700 border border-purple-200',
+    'bg-violet-100 text-violet-700 border border-violet-200',
+    'bg-fuchsia-100 text-fuchsia-700 border border-fuchsia-200',
+    'bg-indigo-100 text-indigo-700 border border-indigo-200',
+    'bg-pink-100 text-pink-700 border border-pink-200'
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-violet-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-2">
-            ✏️ EDIT YOUR SKILLS
+            <span className="text-purple-600">✏️</span> EDIT YOUR SKILLS
           </h1>
           <p className="text-gray-600">
             Add skills you can teach to other students. You can add multiple skills with custom descriptions.
@@ -172,9 +172,9 @@ const EditSkills = () => {
         />
 
         {/* Current Skills Section */}
-        <div className="mt-8 bg-white rounded-xl shadow-lg p-8">
+        <div className="mt-8 bg-white rounded-xl shadow-lg border-2 border-purple-100 p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            📚 YOUR CURRENT SKILLS ({skills.length})
+            <span className="text-purple-600">📚</span> YOUR CURRENT SKILLS ({skills.length})
           </h2>
 
           {skills.length === 0 ? (
@@ -196,7 +196,7 @@ const EditSkills = () => {
               {skills.map((skill, idx) => (
                 <div
                   key={idx}
-                  className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow"
+                  className="border-2 border-purple-100 rounded-xl p-6 hover:shadow-md hover:border-purple-200 transition-all"
                 >
                   {editingIndex === idx ? (
                     // Edit Mode
@@ -220,7 +220,7 @@ const EditSkills = () => {
                             }
                           }}
                           rows={4}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-none"
+                          className="w-full px-4 py-2 border-2 border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none resize-none"
                         />
                         <p className={`text-sm mt-1 ${
                           200 - editMessage.length > 50 ? 'text-green-600' : 
@@ -233,7 +233,7 @@ const EditSkills = () => {
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleSaveEdit(idx)}
-                          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors"
+                          className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white font-semibold rounded-lg hover:bg-purple-600 transition-colors shadow-md"
                         >
                           <Save size={18} />
                           Save
@@ -256,7 +256,7 @@ const EditSkills = () => {
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleEditSkill(idx)}
-                            className="p-2 rounded-lg text-indigo-600 hover:bg-indigo-50 transition-colors"
+                            className="p-2 rounded-lg text-purple-600 hover:bg-purple-50 transition-colors"
                             title="Edit skill"
                           >
                             <Edit3 size={18} />
@@ -297,7 +297,7 @@ const EditSkills = () => {
           <button
             onClick={handleSaveAll}
             disabled={saving}
-            className="mt-8 w-full flex items-center justify-center gap-2 bg-indigo-600 text-white font-semibold py-4 px-6 rounded-lg hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+            className="mt-8 w-full flex items-center justify-center gap-2 bg-purple-500 text-white font-semibold py-4 px-6 rounded-lg hover:bg-purple-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
           >
             {saving ? (
               <>

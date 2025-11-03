@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase';
-
+// import { addDummyUsersToFirestore } from './pages/script';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import UserProfile from './pages/UserProfile';
@@ -15,6 +15,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // addDummyUsersToFirestore();
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
